@@ -1,4 +1,4 @@
-https://vercel.com/josecardoso05s-projects/josecardoso05next
+https://josecardoso05next.vercel.app/
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
