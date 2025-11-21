@@ -1,0 +1,20 @@
+[
+  {
+    "title": "HTML",
+    "image": "html_image.svg",
+    "description": "Linguagem de marcação utilizada para estruturar páginas web.",
+    "rating": 4
+  },
+  {
+    "title": "CSS",
+    "image": "css_image.svg",
+    "description": "Folhas de estilo responsáveis pela aparência e layout das páginas.",
+    "rating": 4
+  },
+  {
+    "title": "JavaScript",
+    "image": "js_image.svg",
+    "description": "Linguagem de programação que adiciona interatividade ao frontend.",
+    "rating": 5
+  }
+]
