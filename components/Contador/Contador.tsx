@@ -2,16 +2,19 @@
 import React, { useState, useEffect } from 'react'
 
 export default function Contador() {
-    const [value, setValue] = useState(() => {
-        const valueStored = localStorage.getItem('value')
-        return valueStored ? parseInt(valueStored) : 0
-    })
-
+    const [value, setValue] = useState(0)
     const [history, setHistory] = useState<number[]>([])
 
     useEffect(() => {
-        localStorage.setItem('value', `${value}`);
-    }, [value]);
+        const valueStored = localStorage.getItem('value')
+        if (valueStored) {
+            setValue(parseInt(valueStored))
+        }
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('value', `${value}`)
+    }, [value])
 
     function mudaCor() {
         if (value >= 0 && value <= 3) {
