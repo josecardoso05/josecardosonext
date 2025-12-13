@@ -37,7 +37,7 @@ export default function page() {
             <ul className='pb-6'>
                 {data.map(categoria => (
 
-                    <Link href={"/categorias/" + categoria.name} className='hover:text-blue-600'>
+                    <Link href={"/categorias/" + categoria.name} key={categoria.name} className='hover:text-blue-600'>
                         <li>{categoria.name}</li>
                     </Link>
 

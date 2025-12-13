@@ -24,6 +24,18 @@ export default function page() {
     const [search, setSearch] = useState("")
     const [filteredData, setFilteredData] = useState<Produto[]>([])
     const [opcao, setOpcao] = useState("")
+    const [cart, setCart] = useState<Produto[]>([])
+
+
+    useEffect(() => {
+        const localCart = localStorage.getItem('cart') || '[]'
+        setCart(JSON.parse(localCart))
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }, [cart])
+
 
     useEffect(() => {
         if (!data) return
@@ -33,7 +45,7 @@ export default function page() {
         )
 
         if (opcao === 'nome') {
-            produtoFiltrado.sort((a,b) => a.title.localeCompare(b.title))
+            produtoFiltrado.sort((a, b) => a.title.localeCompare(b.title))
         }
 
         if (opcao === 'precoCrescente') {
@@ -46,6 +58,8 @@ export default function page() {
 
         setFilteredData(produtoFiltrado)
     }, [search, data, opcao])
+
+
 
 
     if (error) {
@@ -71,8 +85,8 @@ export default function page() {
             />
 
             <select className='flex flex-col pb-5 text-black font-bold'
-            value={opcao}
-            onChange={(e) => setOpcao(e.target.value)}
+                value={opcao}
+                onChange={(e) => setOpcao(e.target.value)}
             >
                 <option value="default">Seleciona um filtro</option>
                 <option value="nome">Nome</option>
@@ -82,7 +96,7 @@ export default function page() {
 
             <Link href="/categorias" className='flex flex-col pb-5'>Ver Categorias</Link>
             {filteredData.map(produto => (
-                <ProdutoCard
+                <ProdutoCard key={produto.id}
                     id={produto.id}
                     title={produto.title}
                     price={produto.price}

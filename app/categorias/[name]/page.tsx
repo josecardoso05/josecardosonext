@@ -44,7 +44,8 @@ export default function page({ params }: Props) {
     <>
       {data.map(produto => {
         if (produto.category === name) {
-          return <ProdutoCard
+          
+          return <ProdutoCard key={produto.id}
             id={produto.id}
             title={produto.title}
             price={produto.price}
