@@ -106,6 +106,8 @@ export default function page() {
                     rating={produto.rating}
                 />
             ))}
+
+            <h2>Carrinho</h2>
         </>
     )
 }

@@ -17,12 +17,8 @@ export default function ProdutoCard({id, title, price, description, category, im
     const handleClick = () => {
         const currentCart = JSON.parse(localStorage.getItem('cart') || '[]')
 
-        if (!currentCart.find((produto: Produto) => produto.id === id)) {
             currentCart.push({id, title, price, description, category, image, rating})
             localStorage.setItem('cart', JSON.stringify(currentCart))
-        }
-        alert('Produto já foi adicionado')
-        
     }
 
     return (
