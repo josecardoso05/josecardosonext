@@ -15,7 +15,7 @@ export default function ProdutoCard({id, title, price, description, category, im
     return (
         <article className='p-5'>
             <h2>{title}</h2>
-            <p>Categoria: {category}</p>
+            <p>Preço: {price} €</p>
             <Image
                 src={"https://deisishop.pythonanywhere.com" + image}
                 alt={image}
