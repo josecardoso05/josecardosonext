@@ -4,6 +4,7 @@ import React, { use } from 'react'
 import useSWR from 'swr';
 import { Produto } from '@/models/interfaces';
 import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
+import Link from 'next/link';
 
 interface Props {
   params: Promise<{ name: string }>
@@ -54,6 +55,7 @@ export default function page({ params }: Props) {
           />
         }
       })}
+      <Link href="/categorias" className='bg-blue-500 rounded-2xl p-2'>Voltar atrás</Link>
     </>
   )
 }
