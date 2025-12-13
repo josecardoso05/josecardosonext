@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
+import ProdutoCartCard from '@/components/ProdutoCartCard/ProdutoCartCard';
+import { Preahvihear } from 'next/font/google';
 
 const fetcher = async (url: string) => {
     const res = await fetch(url)
@@ -62,6 +64,24 @@ export default function page() {
 
 
 
+    function adicionarAoCarrinho(id: number) {
+        if (!data) return
+
+        const produto = data.find(p => p.id === id)
+
+        if(!produto) return
+
+        setCart(prev => [...prev, produto])
+    }
+
+    
+    function removerDoCarrinho(id: number) {
+        setCart(p => p.filter(produto => produto.id !== id))
+    }
+
+
+
+
     if (error) {
         return <p>{error.message}</p>
     }
@@ -96,7 +116,8 @@ export default function page() {
 
             <Link href="/categorias" className='flex flex-col pb-5'>Ver Categorias</Link>
             {filteredData.map(produto => (
-                <ProdutoCard key={produto.id}
+                <div>
+                    <ProdutoCard key={produto.id}
                     id={produto.id}
                     title={produto.title}
                     price={produto.price}
@@ -105,9 +126,27 @@ export default function page() {
                     image={produto.image}
                     rating={produto.rating}
                 />
+                <button onClick={() => adicionarAoCarrinho(produto.id)} className='bg-blue-500 p-2 rounded-2xl'>Adicionar ao carrinho</button>
+                </div>
+                
             ))}
 
-            <h2>Carrinho</h2>
+            <h2 className='pt-4'>Carrinho</h2>
+            {cart.map(produto => (
+                <div>
+                 <ProdutoCartCard key={produto.id}
+                    id={produto.id}
+                    title={produto.title}
+                    price={produto.price}
+                    description={produto.description}
+                    category={produto.category}
+                    image={produto.image}
+                    rating={produto.rating}
+                />
+                <button onClick={() => removerDoCarrinho(produto.id)}>Remover do carrinho</button>
+                </div>
+                
+            ))}
         </>
     )
 }
