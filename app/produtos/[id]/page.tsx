@@ -5,6 +5,7 @@ import { Produto } from '@/models/interfaces';
 import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import ProdutoDetalhe from '@/components/ProdutoDetalhe/ProdutoDetalhe';
 
 interface Props { params: { id: string; } }
 
@@ -31,7 +32,7 @@ export default function PaginaUmProduto({ params }: Props) {
 
   return (
     <>
-      <ProdutoCard
+      <ProdutoDetalhe
         id={produto.id}
         title={produto.title}
         price={produto.price}
@@ -40,7 +41,6 @@ export default function PaginaUmProduto({ params }: Props) {
         image={produto.image}
         rating={produto.rating}
       />
-      <Link href="/produtos" className='bg-blue-500 rounded-2xl p-2'>Voltar atrás</Link>
     </>
   );
 }

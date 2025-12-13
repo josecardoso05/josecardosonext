@@ -1,11 +1,19 @@
+'use client'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Produto } from '@/models/interfaces';
+import { useRouter } from 'next/navigation';
 
 export default function ProdutoCard({id, title, price, description, category, image, rating}: Produto) {
+    const router = useRouter()
+
+    const handleNavigation = () => {
+        router.push('/produtos/' + id)
+    }
 
     return (
-        <div>
+        <article className='p-5'>
             <h2>{title}</h2>
             <p>Categoria: {category}</p>
             <Image
@@ -14,10 +22,7 @@ export default function ProdutoCard({id, title, price, description, category, im
                 width={250}
                 height={250}
             />
-            <p>Preço: {price} €</p>
-            <p>{description}</p>
-            <p>Rating: {rating.rate}</p>
-            <p>Rating count: {rating.count}</p>
-        </div>
+            <button onClick={handleNavigation} className='bg-blue-500 p-2 rounded-2xl'>+Info</button>
+        </article>
     )
 }

@@ -1,24 +1,25 @@
 'use client'
 
-import {Produto} from '@/models/interfaces'
+import { Produto } from '@/models/interfaces'
 import useSWR from 'swr';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
 
 const fetcher = async (url: string) => {
     const res = await fetch(url)
 
-    if(!res.ok) {
+    if (!res.ok) {
         throw new Error(`Error: ${res.status} ${res.statusText}`)
     }
-    return  res.json()
+    return res.json()
 }
 
 export default function page() {
 
     const url = 'https://deisishop.pythonanywhere.com/products/'
-    const {data, error, isLoading} = useSWR<Produto[]>(url, fetcher)
+    const { data, error, isLoading } = useSWR<Produto[]>(url, fetcher)
 
     const [search, setSearch] = useState("")
     const [filteredData, setFilteredData] = useState<Produto[]>([])
@@ -44,29 +45,28 @@ export default function page() {
     if (!data) {
         return <p>Não há produtos</p>
     }
-    
-    return(
+
+    return (
         <>
             <h1>Produtos</h1>
-            <input className='flex flex-col' 
-            type="text"
-            placeholder='Escreve o que procuras...'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            <input className='flex flex-col'
+                type="text"
+                placeholder='Escreve o que procuras...'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
             />
 
             <Link href="/categorias">Ver Categorias</Link>
             {filteredData.map(produto => (
-                <article className='p-5' key={produto.id}>
-                    <h2>{produto.title}</h2>
-                    <Image
-                    src={"https://deisishop.pythonanywhere.com" + produto.image}
-                    alt='a'
-                    width={250}
-                    height={250}
-                    />
-                    <Link href={"/produtos/" + produto.id}>Clica para ver o produto</Link>
-                </article>
+                <ProdutoCard
+                    id={produto.id}
+                    title={produto.title}
+                    price={produto.price}
+                    description={produto.description}
+                    category={produto.category}
+                    image={produto.image}
+                    rating={produto.rating}
+                />
             ))}
         </>
     )
