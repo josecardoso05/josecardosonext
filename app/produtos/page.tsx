@@ -28,23 +28,14 @@ export default function page() {
     const [opcao, setOpcao] = useState("")
     const [cart, setCart] = useState<Produto[]>([])
     const [precoTotal, setPrecoTotal] = useState<number>(0)
+    const [checkBox, setCheckBox] = useState(false)
+    const [cupao, setCupao] = useState("")
 
 
     useEffect(() => {
-        let localCart = localStorage.getItem('cart');
-
-        if (!localCart) {
-            localCart = '[]';  // se não existir, usa array vazio
-        }
-
-        try {
-            const parsedCart = JSON.parse(localCart);
-            setCart(Array.isArray(parsedCart) ? parsedCart : []);
-        } catch (err) {
-            console.error("Erro a ler o carrinho do localStorage:", err);
-            setCart([]);
-        }
-    }, []);
+        const localCart = localStorage.getItem('cart') || '[]'
+        setCart(JSON.parse(localCart))
+    }, [])
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
@@ -98,8 +89,37 @@ export default function page() {
     }
 
 
-
-
+    function comprar() {
+        fetch('https://deisishop.pythonanywhere.com/buy', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                products: cart.map(product => product.id),
+                student: checkBox,
+                coupon: cupao,
+                name: ""
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw err
+                    })
+                }
+                return response.json()
+            })
+            .then((response) => {
+                console.log(response)
+                setCart([])
+                alert("Compra realizada com sucesso!")
+            })
+            .catch((err) => {
+                console.error("Erro ao comprar:", err)
+                alert(err.message || "Erro ao comprar")
+            })
+    }
 
 
     if (error) {
@@ -153,6 +173,29 @@ export default function page() {
 
             <h2 className='flex justify-center pt-20 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
             <p>{cart.length === 0 ? '' : 'Preço total: ' + precoTotal.toFixed(2) + '€'}</p>
+
+            <button
+                className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5'
+                onClick={() => comprar()}>
+                Comprar
+            </button>
+
+            <label>
+                Estudante DEISI
+                <input
+                    type="checkbox"
+                    checked={checkBox}
+                    onChange={(e) => setCheckBox(e.target.checked)}
+                />
+            </label>
+
+            <input className='flex flex-col pt-5'
+                type='text'
+                placeholder='Escreve um cupão...'
+                value={cupao}
+                onChange={(e) => setCupao(e.target.value)}
+            />
+
             {cart.map((produto, index) => (
                 <div key={index}>
                     <ProdutoCartCard
