@@ -32,7 +32,6 @@ export default function ProdutoCartCard({ id, title, price, description, categor
                 height={250}
             />
             <button onClick={handleNavigation} className='bg-blue-500 p-2 rounded-2xl'>+Info</button>
-            <button onClick={handleClick}>Remover do carrinho</button>
         </article>
     )
 }

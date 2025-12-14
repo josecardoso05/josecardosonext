@@ -69,14 +69,14 @@ export default function page() {
 
         const produto = data.find(p => p.id === id)
 
-        if(!produto) return
+        if (!produto) return
 
         setCart(prev => [...prev, produto])
     }
 
-    
-    function removerDoCarrinho(id: number) {
-        setCart(p => p.filter(produto => produto.id !== id))
+
+    function removerDoCarrinho(index: number) {
+        setCart(p => p.filter((produto, i) => i !== index))
     }
 
 
@@ -116,36 +116,36 @@ export default function page() {
 
             <Link href="/categorias" className='flex flex-col pb-5'>Ver Categorias</Link>
             {filteredData.map(produto => (
-                <div>
-                    <ProdutoCard key={produto.id}
-                    id={produto.id}
-                    title={produto.title}
-                    price={produto.price}
-                    description={produto.description}
-                    category={produto.category}
-                    image={produto.image}
-                    rating={produto.rating}
-                />
-                <button onClick={() => adicionarAoCarrinho(produto.id)} className='bg-blue-500 p-2 rounded-2xl'>Adicionar ao carrinho</button>
+                <div key={produto.id}>
+                    <ProdutoCard
+                        id={produto.id}
+                        title={produto.title}
+                        price={produto.price}
+                        description={produto.description}
+                        category={produto.category}
+                        image={produto.image}
+                        rating={produto.rating}
+                    />
+                    <button onClick={() => adicionarAoCarrinho(produto.id)} className='bg-blue-500 p-2 rounded-2xl'>Adicionar ao carrinho</button>
                 </div>
-                
+
             ))}
 
-            <h2 className='pt-4'>Carrinho</h2>
-            {cart.map(produto => (
-                <div>
-                 <ProdutoCartCard key={produto.id}
-                    id={produto.id}
-                    title={produto.title}
-                    price={produto.price}
-                    description={produto.description}
-                    category={produto.category}
-                    image={produto.image}
-                    rating={produto.rating}
-                />
-                <button onClick={() => removerDoCarrinho(produto.id)}>Remover do carrinho</button>
+            <h2 className='flex justify-center pt-20 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
+            {cart.map((produto, index) => (
+                <div key={index}>
+                    <ProdutoCartCard
+                        id={produto.id}
+                        title={produto.title}
+                        price={produto.price}
+                        description={produto.description}
+                        category={produto.category}
+                        image={produto.image}
+                        rating={produto.rating}
+                    />
+                    <button onClick={() => removerDoCarrinho(index)} className='flex flex-col p-2 bg-blue-500 rounded-2xl'>Remover do carrinho</button>
                 </div>
-                
+
             ))}
         </>
     )
