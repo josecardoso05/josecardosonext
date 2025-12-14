@@ -27,12 +27,24 @@ export default function page() {
     const [filteredData, setFilteredData] = useState<Produto[]>([])
     const [opcao, setOpcao] = useState("")
     const [cart, setCart] = useState<Produto[]>([])
+    const [precoTotal, setPrecoTotal] = useState<number>(0)
 
 
     useEffect(() => {
-        const localCart = localStorage.getItem('cart') || '[]'
-        setCart(JSON.parse(localCart))
-    }, [])
+        let localCart = localStorage.getItem('cart');
+
+        if (!localCart) {
+            localCart = '[]';  // se não existir, usa array vazio
+        }
+
+        try {
+            const parsedCart = JSON.parse(localCart);
+            setCart(Array.isArray(parsedCart) ? parsedCart : []);
+        } catch (err) {
+            console.error("Erro a ler o carrinho do localStorage:", err);
+            setCart([]);
+        }
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
@@ -62,6 +74,12 @@ export default function page() {
     }, [search, data, opcao])
 
 
+    useEffect(() => {
+        const precoFinal = cart.reduce((add, produto) => add + Number(produto.price), 0)
+        setPrecoTotal(precoFinal)
+    }, [cart])
+
+
 
 
     function adicionarAoCarrinho(id: number) {
@@ -78,6 +96,8 @@ export default function page() {
     function removerDoCarrinho(index: number) {
         setCart(p => p.filter((produto, i) => i !== index))
     }
+
+
 
 
 
@@ -132,6 +152,7 @@ export default function page() {
             ))}
 
             <h2 className='flex justify-center pt-20 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
+            <p>{cart.length === 0 ? '' : 'Preço total: ' + precoTotal.toFixed(2) + '€'}</p>
             {cart.map((produto, index) => (
                 <div key={index}>
                     <ProdutoCartCard
