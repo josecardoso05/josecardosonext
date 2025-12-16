@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
 import ProdutoCartCard from '@/components/ProdutoCartCard/ProdutoCartCard';
-import { Preahvihear } from 'next/font/google';
+import Consulta from '@/components/Consulta/Consulta';
 
 const fetcher = async (url: string) => {
     const res = await fetch(url)
@@ -30,16 +30,22 @@ export default function page() {
     const [precoTotal, setPrecoTotal] = useState<number>(0)
     const [checkBox, setCheckBox] = useState(false)
     const [cupao, setCupao] = useState("")
-
+    
+    const [consulta, setConsulta] = useState<number[]>([])
 
     useEffect(() => {
         const localCart = localStorage.getItem('cart') || '[]'
         setCart(JSON.parse(localCart))
+
+        const lista = localStorage.getItem('consulta') || '[]'
+        setConsulta(JSON.parse(lista))
     }, [])
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
-    }, [cart])
+
+        localStorage.setItem('consulta', JSON.stringify(consulta))
+    }, [cart, consulta])
 
 
     useEffect(() => {
@@ -211,6 +217,15 @@ export default function page() {
                 </div>
 
             ))}
+
+            /* <ul>
+                {consulta.map(produto => (
+                    <Consulta
+                        id={produto.id}
+                    />
+
+            ))}
+            </ul> */
         </>
     )
 }
