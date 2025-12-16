@@ -218,14 +218,6 @@ export default function page() {
 
             ))}
 
-            /* <ul>
-                {consulta.map(produto => (
-                    <Consulta
-                        id={produto.id}
-                    />
-
-            ))}
-            </ul> */
         </>
     )
 }
