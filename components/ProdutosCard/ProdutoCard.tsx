@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import useSWR from 'swr';
+//
 
 export default function ProdutoCard({ id, title, price, description, category, image, rating }: Produto) {
     const [coracao, setCoracao] = useState(false)
