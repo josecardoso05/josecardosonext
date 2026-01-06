@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from 'next/link'
+import Link from "next/link";
 import Relogio from "@/components/Relogio/Relogio";
 
 const geistSans = Geist({
@@ -21,19 +21,35 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-
-  const data = new Date()
+}) {
+  const data = new Date();
 
   return (
-    <html lang="en">
-      <body className='flex flex-col justify-start gap-4 p-20 items-center min-h-screen'>
+    <html lang="pt">
+      <body
+        className="
+          flex flex-col items-center
+          gap-6
+          px-4 py-6
+          md:px-20 md:py-10
+          min-h-screen
+        "
+      >
+        {/* HEADER */}
+        <header className="flex flex-col items-center gap-4">
+          <h1 className="text-xl md:text-2xl font-bold">
+            React & Next.js
+          </h1>
 
-        <header className="flex flex-col items-center">
-          <h1>React & Next.js</h1>
-          <nav className="flex gap-4">
+          <nav
+            className="
+              flex flex-wrap justify-center
+              gap-2 md:gap-4
+              text-sm md:text-base
+            "
+          >
             <Link href="/">Intro</Link>
             <Link href="/sobre">Sobre</Link>
             <Link href="/tecnologias">Tecnologias</Link>
@@ -45,14 +61,25 @@ export default function RootLayout({
           </nav>
         </header>
 
-        <main className="bg-yellow-600 p-5 rounded-2xl max-w-9xl min-h-[70vh]">
+        {/* MAIN */}
+        <main
+          className="
+            bg-gray-300
+            w-full
+            max-w-9xl
+            p-4 md:p-6
+            rounded-2xl
+            min-h-[70vh]
+          "
+        >
           {children}
         </main>
 
-        <footer>DIW {data.getFullYear()}
+        {/* FOOTER */}
+        <footer className="flex flex-col items-center text-sm gap-1">
+          <span>DIW {data.getFullYear()}</span>
           <Relogio />
         </footer>
-
       </body>
     </html>
   );

@@ -19,15 +19,26 @@ export default function page() {
     return <div>Carro não encontrado</div>
   }
 
-  return <>
-    <div className='relative w-[750px] h-[500px]'>
-      <Image
-        src={carro.image}
-        alt='a'
-        fill
-        className="object-cover rounded-2xl"
-      />
-    </div>
-    <h1 className='text-center'>{carro.nome}</h1>
+   return <>
+    <div
+  className="
+    relative aspect-[4/2]
+    w-screen sm:w-full
+    left-1/2 sm:left-0
+    -ml-[50vw] sm:ml-0
+    -mr-[50vw] sm:mr-0
+    sm:aspect-[16/9]
+  "
+>
+  <Image
+    src={carro.image}
+    alt="Imagem do carro"
+    fill
+    className="object-cover"
+    priority
+  />
+</div>
+
+    <h1 className="text-center">{carro.nome}</h1>
   </>
 }
