@@ -28,6 +28,7 @@ export default function page() {
     const [filteredData, setFilteredData] = useState<Produto[]>([]);
 
     const [cart, setCart] = useState<Produto[]>([]);
+    const [precoTotal, setPrecoTotal] = useState(0);
 
 
     useEffect(() => {
@@ -35,12 +36,18 @@ export default function page() {
         const produtosCart = localStorage.getItem('cart') || '[]';
         setCart(JSON.parse(produtosCart))
 
-    },[])
+    }, [])
+
+
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart))
+    }, [cart])
+
 
     useEffect(() => {
         if (!data) return;
 
-        const produtosFiltrados = data.filter(p => 
+        const produtosFiltrados = data.filter(p =>
             p.title.toLowerCase().includes(search.toLowerCase())
         );
 
@@ -58,11 +65,35 @@ export default function page() {
 
         setFilteredData(produtosFiltrados);
 
-    },[data, search, select])
+    }, [data, search, select])
 
-    
 
-    
+    useEffect(() => {
+
+        const precoFinal = cart.reduce((acc, p) => acc + Number(p.price), 0);
+        setPrecoTotal(precoFinal);
+    }, [cart])
+
+
+
+    function adicionarProduto(id: number) {
+
+        if (!data) return;
+
+        const produto = data.find(p => p.id === id);
+
+        if (!produto) return;
+
+        setCart(prev => [...prev, produto]);
+    }
+
+
+    function removerProduto(index: number) {
+        setCart(cart.filter((p, i) => i !== index));
+    }
+
+
+
     if (error) return <p>{error.message}</p>;
     if (isLoading) return <p>Carregando...</p>;
     if (!data) return <p>Utilizador inexistente</p>;
@@ -85,32 +116,42 @@ export default function page() {
             </select>
 
             {filteredData.map(p => (
-                <ProdutoCard key={p.id}
-                    id={p.id}
-                    title={p.title}
-                    price={p.price}
-                    description={p.description}
-                    category={p.category}
-                    image={p.image}
-                    rating={p.rating}
-                />
+                <div key={p.id}>
+                    <ProdutoCard
+                        id={p.id}
+                        title={p.title}
+                        price={p.price}
+                        description={p.description}
+                        category={p.category}
+                        image={p.image}
+                        rating={p.rating}
+                    />
+                    <button className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5' onClick={() => adicionarProduto(p.id)}
+                    >Adicionar ao carrinho</button>
+                </div>
+
             ))}
 
 
-            <h1 className='pt-15'>Carrinho</h1>
+            <h2 className='pt-5 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
 
             {cart.map((p, index) => (
-                <ProdutoCard key={index}
-                    id={p.id}
-                    title={p.title}
-                    price={p.price}
-                    description={p.description}
-                    category={p.category}
-                    image={p.image}
-                    rating={p.rating}
-                />
-                
+                <div key={index}>
+                    <ProdutoCard
+                        id={p.id}
+                        title={p.title}
+                        price={p.price}
+                        description={p.description}
+                        category={p.category}
+                        image={p.image}
+                        rating={p.rating}
+                    />
+                    <button className='flex flex-col p-2 bg-red-500 rounded-2xl'
+                        onClick={() => removerProduto(index)}>Remover produto</button>
+                </div>
             ))}
+
+            <p>{cart.length === 0 ? '' : 'Preço total: ' + precoTotal.toFixed(2) + '€'}</p>
 
         </>
 
