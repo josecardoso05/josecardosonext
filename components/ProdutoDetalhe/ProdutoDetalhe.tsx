@@ -1,48 +1,26 @@
 'use client'
-
 import React from 'react'
 import { Produto } from '@/models/interfaces'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import Link from 'next/link'
 
-
-export default function ProdutoDetalhe({ id, title, price, description, category, image, rating }: Produto) {
-    const [coracao, setCoracao] = useState(false)
-    
-    const router = useRouter()
-
-    const handleNavigation = () => {
-        router.push('/produtos')
-    }
-
-    function clicaCoracao() {
-        if (coracao === false) {
-            setCoracao(true)
-        } else {
-            setCoracao(false)
-        }
-
-    }
-
+export default function ProdutoDetalhe(props: Produto) {
     return (
-        <div>
-            <h2>{title}</h2>
-            <p>Categoria: {category}</p>
-            <Image
-                src={"https://deisishop.pythonanywhere.com" + image}
-                alt={image}
+
+        <article className='mt-5'>
+            <h2>{props.title}</h2>
+            <p>{`Preço: ${props.price}€`}</p>
+            <Image className='my-3'
+                src={props.image}
+                alt={props.title}
                 width={250}
                 height={250}
             />
-            <p>Preço: {price} €</p>
-            <p>{description}</p>
-            <p>Rating: {rating.rate}</p>
-            <p>Rating count: {rating.count}</p>
-            <button onClick={handleNavigation} className='bg-blue-500 p-2 rounded-2xl'>Voltar atrás</button>
+            <p>{`Sobre este produto: ${props.description}`}</p>
+            <p>{`Rating: ${props.rating.rate}`}</p>
+            <p>{`Rating count: ${props.rating.count}`}</p>
 
-            <button onClick={() => clicaCoracao()}>{coracao ? "❤️": "🤍"}</button>
-
-        </div>
+            <Link href="/p" className='bg-blue-500 p-2 rounded-2xl'>Volar atrás</Link>
+        </article>
     )
 }
