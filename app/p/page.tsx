@@ -34,10 +34,8 @@ export default function page() {
 
         const produtosCart = localStorage.getItem('cart') || '[]';
         setCart(JSON.parse(produtosCart))
-        console.log(cart)
 
     },[])
-
 
     useEffect(() => {
         if (!data) return;
@@ -61,15 +59,6 @@ export default function page() {
         setFilteredData(produtosFiltrados);
 
     },[data, search, select])
-
-
-    function comprar(produto: Produto) {
-        let produtosCart = JSON.parse(localStorage.getItem('cart') || '[]');
-
-        produtosCart.push(produto)
-        localStorage.setItem('cart', JSON.stringify(produtosCart))
-        setCart(produtosCart);
-    }
 
     
 
