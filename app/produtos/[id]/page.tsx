@@ -1,46 +1,45 @@
 'use client'
-
-import useSWR from 'swr';
+import React from 'react'
 import { Produto } from '@/models/interfaces';
-import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
+import { useParams } from 'next/navigation'
+import useSWR from 'swr'
 import ProdutoDetalhe from '@/components/ProdutoDetalhe/ProdutoDetalhe';
 
-interface Props { params: { id: string; } }
-
 const fetcher = async (url: string) => {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Erro: ${res.status}`);
-  return res.json();
-};
+    const res = await fetch(url);
 
-export default function PaginaUmProduto({ params }: Props) {
+    if (!res.ok) {
+        throw new Error(`Erro: ${res.status} ${res.statusText}`);
+    }
 
-  const url = 'https://deisishop.pythonanywhere.com/products/';
-  const { data, error, isLoading } = useSWR<Produto[]>(url, fetcher);
+    return res.json();
+}
 
-  const { id } = useParams()
+export default function page() {
 
-  if (isLoading) return <p>A carregar...</p>;
-  if (error) return <p>{error.message}</p>;
-  if (!data) return <p>Não há produtos</p>;
+    const params = useParams();
+    const id = Number(params.id);
 
-  const produto = data.find(p => p.id === Number(id));
+    const url_api = 'https://deisishop.pythonanywhere.com/products/' + id;
 
-  if (!produto) return <p>Produto 3 não encontrado</p>;
+    const { data, error, isLoading } = useSWR<Produto>(url_api, fetcher);
 
-  return (
-    <>
-      <ProdutoDetalhe
-        id={produto.id}
-        title={produto.title}
-        price={produto.price}
-        description={produto.description}
-        category={produto.category}
-        image={produto.image}
-        rating={produto.rating}
-      />
-    </>
-  );
+
+
+
+    if (error) return <p>{error.message}</p>;
+    if (isLoading) return <p>Carregando...</p>;
+    if (!data) return <p>Utilizador inexistente</p>;
+
+    return (
+        <ProdutoDetalhe
+            id={data.id}
+            title={data.title}
+            price={data.price}
+            description={data.description}
+            category={data.category}
+            image={data.image}
+            rating={data.rating}
+        />
+    )
 }

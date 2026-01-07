@@ -64,7 +64,7 @@ export default function RootLayout({
         {/* MAIN */}
         <main
           className="
-            bg-gray-300
+            bg-yellow-700
             w-full
             max-w-9xl
             p-4 md:p-6

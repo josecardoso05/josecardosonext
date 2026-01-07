@@ -1,97 +1,98 @@
 'use client'
-
-import { Produto } from '@/models/interfaces'
-import useSWR from 'swr';
-import Image from 'next/image';
-import Link from 'next/link';
+import React from 'react'
+import useSWR from 'swr'
+import { Produto } from '@/models/interfaces';
+import ProdutoCard from '@/components/ProdutoCard/ProdutoCard';
 import { useState, useEffect } from 'react';
-import ProdutoCard from '@/components/ProdutosCard/ProdutoCard';
-import ProdutoCartCard from '@/components/ProdutoCartCard/ProdutoCartCard';
-import Consulta from '@/components/Consulta/Consulta';
+
 
 const fetcher = async (url: string) => {
-    const res = await fetch(url)
+    const res = await fetch(url);
 
     if (!res.ok) {
-        throw new Error(`Error: ${res.status} ${res.statusText}`)
+        throw new Error(`Erro: ${res.status} ${res.statusText}`);
     }
-    return res.json()
+
+    return res.json();
 }
+
 
 export default function page() {
 
-    const url = 'https://deisishop.pythonanywhere.com/products/'
-    const { data, error, isLoading } = useSWR<Produto[]>(url, fetcher)
+    const url_api = 'https://deisishop.pythonanywhere.com/products';
 
-    const [search, setSearch] = useState("")
-    const [filteredData, setFilteredData] = useState<Produto[]>([])
-    const [opcao, setOpcao] = useState("")
-    const [cart, setCart] = useState<Produto[]>([])
-    const [precoTotal, setPrecoTotal] = useState<number>(0)
-    const [checkBox, setCheckBox] = useState(false)
-    const [cupao, setCupao] = useState("")
-    
-    const [consulta, setConsulta] = useState<number[]>([])
+    const { data, error, isLoading } = useSWR<Produto[]>(url_api, fetcher);
+
+    const [search, setSearch] = useState("");
+    const [select, setSelect] = useState("");
+    const [filteredData, setFilteredData] = useState<Produto[]>([]);
+
+    const [cart, setCart] = useState<Produto[]>([]);
+    const [precoTotal, setPrecoTotal] = useState(0);
+
+    const [checkBox, setCheckBox] = useState(false);
+    const [cupao, setCupao] = useState("");
+
 
     useEffect(() => {
-        const localCart = localStorage.getItem('cart') || '[]'
-        setCart(JSON.parse(localCart))
 
-        const lista = localStorage.getItem('consulta') || '[]'
-        setConsulta(JSON.parse(lista))
+        const produtosCart = localStorage.getItem('cart') || '[]';
+        setCart(JSON.parse(produtosCart))
+
     }, [])
+
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
-
-        localStorage.setItem('consulta', JSON.stringify(consulta))
-    }, [cart, consulta])
+    }, [cart])
 
 
     useEffect(() => {
-        if (!data) return
+        if (!data) return;
 
-        const produtoFiltrado = data.filter(produto =>
-            produto.title.toLowerCase().includes(search.toLowerCase())
-        )
+        const produtosFiltrados = data.filter(p =>
+            p.title.toLowerCase().includes(search.toLowerCase())
+        );
 
-        if (opcao === 'nome') {
-            produtoFiltrado.sort((a, b) => a.title.localeCompare(b.title))
+        if (select === 'nome') {
+            produtosFiltrados.sort((a, b) => a.title.localeCompare(b.title));
         }
 
-        if (opcao === 'precoCrescente') {
-            produtoFiltrado.sort((a, b) => a.price - b.price)
+        if (select === 'precoCrescente') {
+            produtosFiltrados.sort((a, b) => a.price - b.price);
         }
 
-        if (opcao === 'precoDrescente') {
-            produtoFiltrado.sort((a, b) => b.price - a.price)
+        if (select === 'precoDecrescente') {
+            produtosFiltrados.sort((a, b) => b.price - a.price);
         }
 
-        setFilteredData(produtoFiltrado)
-    }, [search, data, opcao])
+        setFilteredData(produtosFiltrados);
+
+    }, [data, search, select])
 
 
     useEffect(() => {
-        const precoFinal = cart.reduce((add, produto) => add + Number(produto.price), 0)
-        setPrecoTotal(precoFinal)
+
+        const precoFinal = cart.reduce((acc, p) => acc + Number(p.price), 0);
+        setPrecoTotal(precoFinal);
     }, [cart])
 
 
 
+    function adicionarProduto(id: number) {
 
-    function adicionarAoCarrinho(id: number) {
-        if (!data) return
+        if (!data) return;
 
-        const produto = data.find(p => p.id === id)
+        const produto = data.find(p => p.id === id);
 
-        if (!produto) return
+        if (!produto) return;
 
-        setCart(prev => [...prev, produto])
+        setCart(prev => [...prev, produto]);
     }
 
 
-    function removerDoCarrinho(index: number) {
-        setCart(p => p.filter((produto, i) => i !== index))
+    function removerProduto(index: number) {
+        setCart(cart.filter((p, i) => i !== index));
     }
 
 
@@ -105,7 +106,7 @@ export default function page() {
                 products: cart.map(product => product.id),
                 student: checkBox,
                 coupon: cupao,
-                name: ""
+                name: "name"
             })
         })
             .then(response => {
@@ -128,96 +129,88 @@ export default function page() {
     }
 
 
-    if (error) {
-        return <p>{error.message}</p>
-    }
 
-    if (isLoading) {
-        return <p>A descarregar dados</p>
-    }
-
-    if (!data) {
-        return <p>Não há produtos</p>
-    }
+    if (error) return <p>{error.message}</p>;
+    if (isLoading) return <p>Carregando...</p>;
+    if (!data) return <p>Utilizador inexistente</p>;
 
     return (
         <>
-            <h1>Produtos</h1>
-            <input className='flex flex-col py-5'
-                type="text"
-                placeholder='Escreve o que procuras...'
+            <input type="text" placeholder='O que procuras...' className='text-black font-bold'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
 
-            <select className='flex flex-col pb-5 text-black font-bold'
-                value={opcao}
-                onChange={(e) => setOpcao(e.target.value)}
+            <select className='text-black font-bold pl-5'
+                value={select}
+                onChange={(e) => setSelect(e.target.value)}
             >
-                <option value="default">Seleciona um filtro</option>
+                <option value="default">Escolhe um filtro</option>
                 <option value="nome">Nome</option>
-                <option value="precoCrescente">Preço (Mais baixo)</option>
-                <option value="precoDecrescente">Preço (Mais alto)</option>
+                <option value="precoCrescente">Preço Crescente</option>
+                <option value="precoDecrescente">Preço Decrescente</option>
             </select>
 
-            <Link href="/categorias" className='flex flex-col pb-5'>Ver Categorias</Link>
-            {filteredData.map(produto => (
-                <div key={produto.id}>
+            {filteredData.map(p => (
+                <div key={p.id}>
                     <ProdutoCard
-                        id={produto.id}
-                        title={produto.title}
-                        price={produto.price}
-                        description={produto.description}
-                        category={produto.category}
-                        image={produto.image}
-                        rating={produto.rating}
+                        id={p.id}
+                        title={p.title}
+                        price={p.price}
+                        description={p.description}
+                        category={p.category}
+                        image={p.image}
+                        rating={p.rating}
                     />
-                    <button onClick={() => adicionarAoCarrinho(produto.id)} className='bg-blue-500 p-2 rounded-2xl'>Adicionar ao carrinho</button>
+                    <button className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5' onClick={() => adicionarProduto(p.id)}
+                    >Adicionar ao carrinho</button>
                 </div>
 
             ))}
 
-            <h2 className='flex justify-center pt-20 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
+
+            <h2 className='pt-5 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
+
             <p>{cart.length === 0 ? '' : 'Preço total: ' + precoTotal.toFixed(2) + '€'}</p>
 
-            <button
-                className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5'
-                onClick={() => comprar()}>
-                Comprar
-            </button>
+
+
 
             <label>
                 Estudante DEISI
-                <input
-                    type="checkbox"
+                <input type="checkbox"
                     checked={checkBox}
                     onChange={(e) => setCheckBox(e.target.checked)}
                 />
             </label>
 
-            <input className='flex flex-col pt-5'
-                type='text'
-                placeholder='Escreve um cupão...'
+
+            <input type="text" placeholder='Inserir cupão...' className='flex flex-col'
                 value={cupao}
                 onChange={(e) => setCupao(e.target.value)}
             />
 
-            {cart.map((produto, index) => (
-                <div key={index}>
-                    <ProdutoCartCard
-                        id={produto.id}
-                        title={produto.title}
-                        price={produto.price}
-                        description={produto.description}
-                        category={produto.category}
-                        image={produto.image}
-                        rating={produto.rating}
-                    />
-                    <button onClick={() => removerDoCarrinho(index)} className='flex flex-col p-2 bg-blue-500 rounded-2xl'>Remover do carrinho</button>
-                </div>
+            <button className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5'
+            onClick={() => comprar()}>Comprar</button>
 
+
+            {cart.map((p, index) => (
+                <div key={index}>
+                    <ProdutoCard
+                        id={p.id}
+                        title={p.title}
+                        price={p.price}
+                        description={p.description}
+                        category={p.category}
+                        image={p.image}
+                        rating={p.rating}
+                    />
+                    <button className='flex flex-col p-2 bg-red-500 rounded-2xl'
+                        onClick={() => removerProduto(index)}>Remover produto</button>
+                </div>
             ))}
 
         </>
+
     )
 }
