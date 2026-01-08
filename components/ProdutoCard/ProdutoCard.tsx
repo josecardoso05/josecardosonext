@@ -16,7 +16,7 @@ export default function ProdutoCard(props: Produto) {
                 width={250}
                 height={250}
             />
-            <Link href={`/p/${props.id}`} className='bg-blue-500 p-2 rounded-2xl'>+Info</Link>
+            <Link href={`/produtos/${props.id}`} className='bg-blue-500 p-2 rounded-2xl'>+Info</Link>
 
         </article>
     )
