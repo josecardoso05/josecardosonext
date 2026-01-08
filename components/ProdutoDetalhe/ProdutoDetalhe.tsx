@@ -20,7 +20,7 @@ export default function ProdutoDetalhe(props: Produto) {
             <p>{`Rating: ${props.rating.rate}`}</p>
             <p>{`Rating count: ${props.rating.count}`}</p>
 
-            <Link href="/produtos" className='bg-blue-500 p-2 rounded-2xl'>Volar atrás</Link>
+            <Link href="/produtos" className='bg-blue-500 p-2 rounded-2xl'>Voltar atrás</Link>
         </article>
     )
 }

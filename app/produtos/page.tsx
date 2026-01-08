@@ -162,7 +162,7 @@ export default function page() {
                         image={p.image}
                         rating={p.rating}
                     />
-                    <button className='flex flex-col bg-blue-500 rounded-2xl p-2 mb-5' onClick={() => adicionarProduto(p.id)}
+                    <button className='flex flex-col bg-blue-500 rounded-2xl p-2 mt-3 mb-5' onClick={() => adicionarProduto(p.id)}
                     >Adicionar ao carrinho</button>
                 </div>
 
