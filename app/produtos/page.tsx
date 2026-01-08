@@ -205,7 +205,7 @@ export default function page() {
                         image={p.image}
                         rating={p.rating}
                     />
-                    <button className='flex flex-col p-2 bg-red-500 rounded-2xl'
+                    <button className='flex flex-col p-2 mt-5 bg-red-500 rounded-2xl'
                         onClick={() => removerProduto(index)}>Remover produto</button>
                 </div>
             ))}
