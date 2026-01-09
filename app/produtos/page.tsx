@@ -120,7 +120,7 @@ export default function page() {
             .then((response) => {
                 console.log(response)
                 setCart([])
-                alert("Compra realizada com sucesso!")
+                alert("Compra realizada com sucesso!" + " | Preço total: " + response.totalCost + "€" + " | Referência: " + response.reference)
             })
             .catch((err) => {
                 console.error("Erro ao comprar:", err)
@@ -169,10 +169,10 @@ export default function page() {
             ))}
 
 
+
             <h2 className='pt-5 text-xl'>{cart.length === 0 ? 'Carrinho vazio... Adiciona produtos!' : 'Carrinho'}</h2>
 
             <p>{cart.length === 0 ? '' : 'Preço total: ' + precoTotal.toFixed(2) + '€'}</p>
-
 
 
 

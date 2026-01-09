@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Produto } from '@/models/interfaces'
 import Image from 'next/image'
 import Link from 'next/link'
